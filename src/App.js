@@ -1,23 +1,35 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from "react";
+import "@progress/kendo-theme-default/dist/all.css";
+import { Grid, GridColumn } from "@progress/kendo-react-grid";
+import Selected from "./components/Selected";
 
 function App() {
+  const [podaci, setPodaci] = useState(null);
+  const [text, setText] = useState("");
+
+  useEffect(() => {
+    fetch("http://173.212.203.236/BRODARSTVO/api/vratikomitente")
+      .then((response) => response.json())
+      .then((data) => setPodaci(data));
+  }, []);
+
+  const kliknutRed = (event) => {
+    setText(event.dataItem);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <Selected red={text} />
+      <Grid data={podaci} onRowClick={kliknutRed}>
+        <GridColumn field="sifra" title="SIFRA" />
+        <GridColumn field="naziv_firme" title="NAZIV FIRME" />
+        <GridColumn field="ptt" title="PTT" />
+        <GridColumn field="pak" title="PAK" />
+        <GridColumn field="mesto" title="MESTO" />
+        <GridColumn field="ulica" title="ULICA" />
+        <GridColumn field="drzava" title="DRZAVA" />
+        <GridColumn field="opstina" title="OPSTINA" />
+      </Grid>
     </div>
   );
 }
